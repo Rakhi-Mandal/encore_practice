@@ -118,7 +118,6 @@ exports.ChatPage = class ChatPage {
     async renameTheChat() {
         await this.chatContent.click();
         await this.creatChatIcon.click();
-        await this.page.reload();
         await this.user1.click();
         await this.creatChatButton.click();
         await expect(this.groupIcon).toBeVisible();
@@ -131,8 +130,9 @@ exports.ChatPage = class ChatPage {
 
         await this.editButton.click();
         const chatNameInput = await this.groupName;
-        await chatNameInput.fill('');  // Clear the input field first
-        await chatNameInput.fill(data.renameGroup);  
+    
+        await chatNameInput.fill(data.renameGroup);
+
 
         await this.save.click();
 
