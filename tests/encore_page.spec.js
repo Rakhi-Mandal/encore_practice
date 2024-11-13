@@ -1,7 +1,8 @@
 import { test, } from '@playwright/test';
-import { getCurrentDate, getWeekDates } from '../utils/dateAndMonth';
 const index = require("../utils/index.page")
-const data= require("../data/data.json");
+const helper = require("../utils/helper")
+require('dotenv').config();
+
 
 test.describe('Customer Calendar Tests', () => {
 let login;
@@ -9,11 +10,13 @@ let customerCalender;
 test.beforeEach(async ({ page }) => {
      login= new index.Login(page)
      customerCalender = new index.CustomerCalender(page)
-    await login.navigateToDashBoard(data.login.username,data.login.password);
+     const email=process.env.userEmail
+     const password=process.env.password
+    await login.login(email,password);
 });
 
 test('Current Date', async () => {
-    const currentDate = getCurrentDate();
+    const currentDate = helper.getCurrentDate();
     await customerCalender.selectDate(currentDate);
 });
 
@@ -27,7 +30,7 @@ test('Select Today and verify selection', async () => {
 });
 
 test.only('Change dates and verify customers returned', async () => {
-    const dates = getWeekDates(); 
+    const dates = helper.getWeekDates(); 
     for (const date of dates) {
         await customerCalender.selectDate(date);
     }

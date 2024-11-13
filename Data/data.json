@@ -1,13 +1,4 @@
 {
-    "login":{
-    "username" : "s-tst-navi-CRM@psav.com",
-    "password" :"Winter23$"
-    },
-
-    "timeout":{
-        "normalTimeout": 5000,
-        "bigTimeout": 10000
-    },
     "expectedClasses": {
         "selectedDateClass": "bg-encore-accent-blue text-white"
     }

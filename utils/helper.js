@@ -1,13 +1,12 @@
-
-export function getCurrentDate() {
+function getCurrentDate() {
     return new Date().getDate().toString();
 }
 
-export function getCurrentMonth() {
+function getCurrentMonth() {
     return new Date().toLocaleString('default', { month: 'long' }).toUpperCase();
 }
 
-export function getWeekDates(startDate = new Date()) {
+function getWeekDates(startDate = new Date()) {
     const dates = [];
     const today = startDate.getDay(); 
     const daysToEndOfWeek = 6 - today;
@@ -20,5 +19,8 @@ export function getWeekDates(startDate = new Date()) {
     return dates;
 }
 
-
-
+module.exports = {
+    getCurrentDate,
+    getCurrentMonth,
+    getWeekDates
+};

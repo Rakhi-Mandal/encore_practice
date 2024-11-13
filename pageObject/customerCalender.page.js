@@ -1,6 +1,7 @@
 const { expect } = require('@playwright/test');
-import { getCurrentDate, getCurrentMonth } from '../utils/dateAndMonth';
-const data= require("../data/data.json");
+const data = require("../data/data.json");
+require('dotenv').config();
+const helper = require("../utils/helper")
 
 
 exports.CustomerCalender = class CustomerCalender {
@@ -11,12 +12,14 @@ exports.CustomerCalender = class CustomerCalender {
         this.nextWeekButton = page.locator('.e2e_date_selector_next_week');
         this.currentMonthDisplay = page.locator("//div[contains(@class, 'e2e_date_selector_month')]");
         this.todayButton = page.locator('div[title="Tuesday, November 12, 2024"]');
+        this.getDateElement = (date) => this.dateElements.locator(`text=${date}`);
+        this.getSelectedDateElement = () => this.dateElements.locator(`text=${helper.getCurrentDate()}`);
     }
 
     async selectDate(date) {
-        const dateElement = this.dateElements.locator(`text=${date}`);
-        const visibilityTimeout = data.timeout.normalTimeout
-        await expect(dateElement).toBeVisible({timeout: visibilityTimeout});
+        const dateElement = this.getDateElement(date);
+        const visibilityTimeout = Number(process.env.bigTimeout);
+        await expect(dateElement).toBeVisible({ timeout: visibilityTimeout });
         await dateElement.click();
     }
 
@@ -30,19 +33,16 @@ exports.CustomerCalender = class CustomerCalender {
 
     async selectTodayAndVerify() {
         await this.todayButton.click();
-        const currentDate = getCurrentDate();
-        const selectedDateElement = this.dateElements.locator(`text=${currentDate}`);
-    
+        
+        const selectedDateElement = this.getSelectedDateElement();
         await expect(selectedDateElement).toBeVisible();
-        await this.page.waitForTimeout(data.timeout.bigTimeout);
-    
-        // Parent element of the date(.. is a special locator)
-        const parentElement = selectedDateElement.locator('..');  
-        await expect(parentElement).toHaveClass(new RegExp(data.expectedClasses.selectedDateClass));
-    
-        const currentMonth = getCurrentMonth();
+        await this.page.waitForTimeout(Number(process.env.bigTimeout));
+        
+        // Parent element of the date (.. is a special locator)
+        const parentElement = selectedDateElement.locator('..');
+        await expect(parentElement).toHaveClass(data.expectedClasses.selectedDateClass);
+
+        const currentMonth = helper.getCurrentMonth();
         await expect(this.currentMonthDisplay).toContainText(currentMonth);
     }
-    
-
 }

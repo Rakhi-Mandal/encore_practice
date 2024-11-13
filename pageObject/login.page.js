@@ -1,6 +1,5 @@
 const { expect } = require('@playwright/test');
 require('dotenv').config();
-const data= require("../data/data.json");
 
 exports.Login = class Login{
     constructor(page){
@@ -12,10 +11,9 @@ exports.Login = class Login{
      
     }
 
-    async navigateToDashBoard(userMail, userPassword){
+    async login(userMail, userPassword){
         await this.page.goto(process.env.lightHouseURL); 
-        // await expect(this.page).toHaveURL(process.env.lightHouseURL)
-        await this.page.waitForTimeout(data.timeout.bigTimeout);
+        await this.page.waitForTimeout(Number(process.env.bigTimeout));
         await this.email.fill(userMail);
         await this.submit.click();
         await this.password.fill(userPassword);
