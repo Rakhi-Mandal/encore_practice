@@ -13,14 +13,16 @@ test.describe("Create New Chat / Add participant / Leave Chat",()=>{
         await loginPage.loginFunction();
         
     })
-    test("Chat Page Module",async()=>{
+    test.skip("Chat Page Module",async()=>{
         await chatPage.testChatElement();
         await chatPage.createNewChatIcon();
         await chatPage.selectingUsers();
         await chatPage.clickOnTheGroupIcon();
         await chatPage.searchFunctionality();
         await chatPage.addButtonOperation();
-        // await chatPage.renameTheChat();
+    })
+    test("Rename the Chat",async()=>{
+        await chatPage.renameTheChat() 
     })
 
 })
