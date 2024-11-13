@@ -1,6 +1,8 @@
 
 {
 "userName":"s-tst-navi-CRM@psav.com",
-"password":"Winter23$"
-    
+"password":"Winter23$",
+"teamSchedule":"mat-button-toggle-checked",
+"mySchedule":"mat-button-toggle-checked",
+"defaultSort":"bg-sky-200"
 }

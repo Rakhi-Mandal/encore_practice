@@ -1,6 +1,8 @@
 const { expect } = require("@playwright/test");
 const data = require("../data/data.json");
-import { format } from "date-fns";
+const {createRegExp,getCurrentDate} = require(
+  "../utils/helper"
+  )
 
 exports.SchedulePage = class SchedulePage {
   constructor(page) {
@@ -9,10 +11,10 @@ exports.SchedulePage = class SchedulePage {
       "//span[normalize-space(text())='Schedule']/parent::div[contains(@class, 'e2e_navigation_item_link')]"
     );
     this.currentDate = page.locator(
-      "//div[contains(@class, 'mbsc-timeline-header-active')]"
+      "//div[contains(@class, 'header-active')]"
     );
     this.teamScheduleTable = page.locator(
-      "//div[contains(@class, ' mbsc-material mbsc-timeline-grid')]"
+      "(//div[contains(@class, 'timeline-grid')])[1]"
     );
     this.filter = page.locator("//icon[@name='filter_bulk']//parent::div");
 
@@ -20,19 +22,18 @@ exports.SchedulePage = class SchedulePage {
       "//div[contains(@class, 'cdk-overlay-pane')]"
     );
 
-    this.clearFiltersButton = this.filterPage.locator(
-      "//span[contains(@class,'e2e_filter_sheet_clear')]"
-    );
-    this.applyFiltersButton = this.filterPage.locator(
+    this.clearFiltersButton = page.locator("(//span[text()=' Clear filters '])[1]");
+    this.applyFiltersButton = page.locator(
       "//span[contains(@class,'e2e_filter_sheet_dismiss')]"
     );
 
     // Filters section
-    this.employeeNameOption = page.locator('div[title="Employee Name"]');
-    this.locationOption = page.locator('div[title="1137-Hotel del Coronado"]');
-    this.assignmentOption = page.locator('div[title="Audio Technician Op"]');
-    this.shiftTypeOption = page.locator('div[title="Hourly"]');
+    this.employeeNameOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[1]');
 
+    this.locationOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[2])[2]');
+    this.assignmentOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[3])[1]');
+    this.shiftTypeOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[3])[1]');
+    
     this.filterTitles = page.locator(
       "(//div[contains(@class, 'e2e_filter_title')])[1]"
     );
@@ -62,11 +63,12 @@ exports.SchedulePage = class SchedulePage {
     await expect(this.teamScheduleTable).toHaveCSS("overflow", "auto");
   }
   async checkHighlightedDate() {
-    const highlightedDate = await this.currentDate.innerText();
-    // Formated the current date in the same format as the date
-    const currentDate = new Date();
-    const formattedCurrentDate = format(currentDate, "EEE MMM dd, yyyy"); 
-    //Compare the actual date with the highlighted date
+    const highlightedDate = await this.currentDate.innerText();  // Get the highlighted date from the page
+
+    // Get the formatted current date by calling the helper function
+    const formattedCurrentDate = getCurrentDate();  
+
+    // Compare the actual date with the highlighted date
     expect(highlightedDate).toBe(formattedCurrentDate);
   }
 
@@ -78,7 +80,17 @@ exports.SchedulePage = class SchedulePage {
 
   }
   async checkDefaultSort(){
-    await expect(this.employeeNameOption).toHaveClass(/bg-sky-200/);
+    await expect(this.employeeNameOption).toHaveClass(createRegExp(data.defaultSort));
+
+
+  }
+  async verifyDefaultSelectedSchedule(){
+     // await expect(schedulePage.teamScheduleButton).toHaveClass(data.teamSchedule); 
+  await expect(this.teamScheduleButton).toHaveClass(createRegExp(data.teamSchedule));
+  // createRegExp
+  
+  // Verify that the "My Schedule" button is NOT checked by default 
+  await expect(this.myScheduleButton).not.toHaveClass(createRegExp(data.mySchedule));
   }
  
   async goToPreviousWeek() {
