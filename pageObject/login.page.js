@@ -11,7 +11,7 @@ exports.LoginPage = class LoginPage {
  
   }
   async loginFunction() {
-    await this.email.fill(process.env.user);
+    await this.email.fill(process.env.userMail);
     await this.submit.click();
     await this.password.fill(process.env.password);
     await this.submit.click();

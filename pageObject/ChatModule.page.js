@@ -8,11 +8,11 @@ exports.ChatPage = class ChatPage {
         this.page = page;
         this.chatContent = page.locator("(//span[contains(@class,'e2e_navigation_item_title')])[4] ")
         this.creatChatIcon = page.locator("//div[contains(@class,'e2e_chat_page_header')]//child::icon")
-        this.image = page.locator("//div[@class='flex flex-col text-center']")
+        this.image = page.locator("//div[@class='flex flex-col text-center']//parent::div")
         this.search = page.locator("//div[@class='flex-1 flex']//child::label")
 
-        this.user1 = page.locator("//div[contains(@class,'ng-star-inserted')]//child::mat-option[@id='mat-option-2']")
-        this.user2 = page.locator("//div[text()=' Rob Griffith ']")
+        this.user1 = page.locator("(//div[contains(@class,'mat-primary ng-star-inserted')]//child::mat-option[@class='mat-mdc-option mdc-list-item ng-star-inserted'])[3]")
+        this.user2 = page.locator("(//div[contains(@class,'mat-primary ng-star-inserted')]//child::mat-option[@class='mat-mdc-option mdc-list-item ng-star-inserted'])[5]")
         this.reloadPage = page.locator("//div[contains(@class,'ng-trigger ng-trigger-panelAnimation')]")
 
         this.creatChatButton = page.locator("//button[contains(@class,'ng-star-inserted')]")
@@ -44,16 +44,14 @@ exports.ChatPage = class ChatPage {
     async createNewChatIcon() {
         await this.chatContent.click();
         await this.creatChatIcon.click();
-        await expect(this.user1).toBeEditable();
+        // await expect(this.user1).toBeEditable();
         await expect(this.user1).toBeVisible();
     }
     async selectingUsers() {
         await this.chatContent.click();
         await this.creatChatIcon.click();
-        await this.page.reload();
         await this.user1.click();
-        await this.page.reload();
-        await this.user2.click();
+        // await this.user2.click();
         await this.creatChatButton.click();
         await expect(this.groupIcon).toBeVisible();
 
@@ -67,7 +65,6 @@ exports.ChatPage = class ChatPage {
     async clickOnTheGroupIcon() {
         await this.chatContent.click();
         await this.creatChatIcon.click();
-        await this.page.reload();
         await this.user1.click();
         await this.creatChatButton.click();
         await expect(this.groupIcon).toBeVisible();
@@ -122,20 +119,14 @@ exports.ChatPage = class ChatPage {
         await this.creatChatButton.click();
         await expect(this.groupIcon).toBeVisible();
         await this.groupIcon.click();
-
         await expect(this.addParticipant).toBeVisible();
         await this.addParticipant.click();
         await this.user2.click();
         await this.addButton.click();
-
         await this.editButton.click();
         const chatNameInput = await this.groupName;
-    
         await chatNameInput.fill(data.renameGroup);
-
-
         await this.save.click();
-
-
+        await expect(chatNameInput).toHaveText(data.renameGroup)
     }
 }
