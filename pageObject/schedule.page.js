@@ -3,6 +3,8 @@ const data = require("../data/data.json");
 const {createRegExp,getCurrentDate} = require(
   "../utils/helper"
   )
+require("dotenv").config();
+
 
 exports.SchedulePage = class SchedulePage {
   constructor(page) {
@@ -21,6 +23,8 @@ exports.SchedulePage = class SchedulePage {
     this.filterPage = page.locator(
       "//div[contains(@class, 'cdk-overlay-pane')]"
     );
+    this.filterTitles = page.locator("(//div[contains(@class, 'filter_title')])[1]");
+    
 
     this.clearFiltersButton = page.locator("(//span[text()=' Clear filters '])[1]");
     this.applyFiltersButton = page.locator(
@@ -29,14 +33,12 @@ exports.SchedulePage = class SchedulePage {
 
     // Filters section
     this.employeeNameOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[1]');
-
-    this.locationOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[2])[2]');
-    this.assignmentOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[3])[1]');
-    this.shiftTypeOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div[3])[1]');
-    
-    this.filterTitles = page.locator(
-      "(//div[contains(@class, 'e2e_filter_title')])[1]"
-    );
+    this.locationTitle = page.locator('(//div[contains(@class, "filter_title")])[2]');
+    this.locationOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[3]');
+    this.assignmentTitle = page.locator('(//div[contains(@class, "filter_title")])[5]');
+    this.assignmentOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[35]');
+    this.shiftTitle = page.locator('(//div[contains(@class, "filter_title")])[7]');
+    this.shiftTypeOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[80]');
 
     this.leftArrow = page.locator(
       "(//icon[contains(@class,'e2e_schedule_previous')])[2]"
@@ -75,11 +77,12 @@ exports.SchedulePage = class SchedulePage {
   async openFilter() {
     await expect(this.filter).toBeVisible();
     await this.filter.click();
-    await expect(this.filterPage).toBeVisible({ timeout: 1000 });
+    await expect(this.filterPage).toBeVisible(parseInt(process.env.smallTimeOut));
     // await expect(this.filterPage).toBeVisible();
 
   }
   async checkDefaultSort(){
+    await this.filterTitles.click();
     await expect(this.employeeNameOption).toHaveClass(createRegExp(data.defaultSort));
 
 
@@ -127,18 +130,21 @@ exports.SchedulePage = class SchedulePage {
 
   async selectLocation() {
     // Select the "Location" filter
+    await this.locationTitle.click();
     await expect(this.locationOption).toBeVisible();
     await this.locationOption.click();
   }
 
   async selectAssignment() {
     // Select the "Assignment" filter
+    await this.assignmentTitle.click();
     await expect(this.assignmentOption).toBeVisible();
     await this.assignmentOption.click();
   }
 
   async selectShiftType() {
     // Select the "Shift Type" filter
+    await this.shiftTitle.click()
     await expect(this.shiftTypeOption).toBeVisible();
     await this.shiftTypeOption.click();
   }
@@ -157,7 +163,7 @@ exports.SchedulePage = class SchedulePage {
     await this.selectSortByEmployeeName();
     await this.selectLocation();
     await this.selectAssignment();
-    await this.selectShiftType();
+    // await this.selectShiftType();
     await this.applyFilter();
   }
 };

@@ -11,7 +11,7 @@ beforeEach(async ({ page }) => {
   loginPage = new index.LoginPage(page);
 
   await page.goto(process.env.lightHouseURL);
-  await loginPage.loginFunction(data.userName, data.password);
+  await loginPage.loginFunction(process.env.userEmail, process.env.userPassword);
 });
 test("C56916: a:Launch Schedule page and check the functionality", async ({page}) => {
   await schedulePage.scheduleModule.waitFor({ state: "visible" }); // Wait until visible

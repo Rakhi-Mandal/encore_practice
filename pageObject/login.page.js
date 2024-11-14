@@ -9,10 +9,10 @@ exports.LoginPage = class LoginPage {
         
 
   }
-  async loginFunction(userName, password) {
-    await this.email.fill(userName);
+  async loginFunction(userEmail, userPassword) {
+    await this.email.fill(userEmail);
     await this.submit.click();
-    await this.password.fill(password);
+    await this.password.fill(userPassword);
     await this.submit.click();
     await this.checkBox.click();
     await this.submit.click();
