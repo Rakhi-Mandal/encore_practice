@@ -19,8 +19,13 @@ function getWeekDates(startDate = new Date()) {
     return dates;
 }
 
+function createRegExp(dataValue) {
+    return new RegExp(dataValue);
+}
+
 module.exports = {
     getCurrentDate,
     getCurrentMonth,
-    getWeekDates
+    getWeekDates,
+    createRegExp
 };

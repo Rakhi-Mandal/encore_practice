@@ -1,39 +1,34 @@
-import { test, } from '@playwright/test';
-const index = require("../utils/index.page")
-const helper = require("../utils/helper")
+import { test } from '@playwright/test';
+const index = require("../utils/index.page");
 require('dotenv').config();
+const {  getWeekDates } = require("../utils/helper");
+
+test.describe('Combined Customer Calendar Test', () => {
+    let login;
+    let customerCalender;
+    let agenda;
+
+    test('Run all steps in sequence', async ({ page }) => {
+        login = new index.Login(page);
+        customerCalender = new index.CustomerCalender(page);
+        agenda = new index.Agenda(page);
+
+        const email = process.env.userEmail;
+        const password = process.env.password;
+        await login.login(email, password);
+
+        await customerCalender.navigateLeft();
+        await customerCalender.navigateRight();
 
 
-test.describe('Customer Calendar Tests', () => {
-let login;
-let customerCalender;
-test.beforeEach(async ({ page }) => {
-     login= new index.Login(page)
-     customerCalender = new index.CustomerCalender(page)
-     const email=process.env.userEmail
-     const password=process.env.password
-    await login.login(email,password);
-});
+        await customerCalender.selectTodayAndVerify();
 
-test('Current Date', async () => {
-    const currentDate = helper.getCurrentDate();
-    await customerCalender.selectDate(currentDate);
-});
+        const dates = getWeekDates();
+        for (const date of dates) {
+            await customerCalender.selectDate(date);
+        }
+        
+        await agenda.clickAgenda();
 
-test('Navigate weeks with arrows', async () => {
-    await customerCalender.navigateLeft();
-    await customerCalender.navigateRight();
-});
-
-test('Select Today and verify selection', async () => {
-    await customerCalender.selectTodayAndVerify();
-});
-
-test.only('Change dates and verify customers returned', async () => {
-    const dates = helper.getWeekDates(); 
-    for (const date of dates) {
-        await customerCalender.selectDate(date);
-    }
-});
-
+    });
 });

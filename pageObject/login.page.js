@@ -13,7 +13,7 @@ exports.Login = class Login{
 
     async login(userMail, userPassword){
         await this.page.goto(process.env.lightHouseURL); 
-        await this.page.waitForTimeout(Number(process.env.bigTimeout));
+        // await this.page.waitForTimeout(parseInt(process.env.bigTimeout));
         await this.email.fill(userMail);
         await this.submit.click();
         await this.password.fill(userPassword);
