@@ -1,35 +1,27 @@
 const { expect } = require("@playwright/test");
 const data = require("../data/data.json");
 const helper = require("../utils/helper");
-// const { createRegExp, getCurrentDate,getOnlyCurrentDate } = require("../utils/helper");
-const { devices } = require("playwright"); 
-const {projects}=require("../playwright.config")
 require("dotenv").config();
 exports.SchedulePage = class SchedulePage {
-  // constructor(page, isMobile = false) {
-  //   this.page = page;
-  //   this.isMobile = isMobile;
   constructor(page) {
-    // const project = projects.find((p) => p.name === projectName);
-    // if (!project) {
-    //   throw new Error(`Project with name ${projectName} not found`);
-    // }
     this.page = page;
     this.isMobile = this.page.context()._options.isMobile;
-    // this.isMobile = project.use.isMobile;
-    this.chatContent = this.isMobile
-    this.scheduleModule =this.isMobile?page.locator('(//app-mobile-navigation-item)[2]'): page.locator(
-      "//span[normalize-space(text())='Schedule']/parent::div[contains(@class, 'navigation_item_link')]"
-    );
-    this.currentDate = this.isMobile?page.locator('//div[contains(@class, "calendar-today")]'):page.locator(
-      "//div[contains(@class, 'timeline-header-active')]"
-    );
-    
+    this.chatContent = this.isMobile;
+    this.scheduleModule = this.isMobile
+      ? page.locator("(//app-mobile-navigation-item)[2]")
+      : page.locator(
+          "//span[normalize-space(text())='Schedule']/parent::div[contains(@class, 'navigation_item_link')]"
+        );
+    this.currentDate = this.isMobile
+      ? page.locator('//div[contains(@class, "calendar-today")]')
+      : page.locator("//div[contains(@class, 'timeline-header-active')]");
 
-    this.teamScheduleTable =this.isMobile?page.locator('.mbsc-event-list'): page.locator(
-      "(//mbsc-timeline//following-sibling::div)[4]"
-    );
-    this.filter =this.isMobile?page.locator("(//icon[@name='filter_bulk']//parent::div)[2]"): page.locator("//icon[@name='filter_bulk']//parent::div");
+    this.teamScheduleTable = this.isMobile
+      ? page.locator(".mbsc-event-list")
+      : page.locator("(//mbsc-timeline//following-sibling::div)[4]");
+    this.filter = this.isMobile
+      ? page.locator("(//icon[@name='filter_bulk']//parent::div)[2]")
+      : page.locator("//icon[@name='filter_bulk']//parent::div");
 
     this.filterPage = page.locator("//app-filter-bottom-sheet");
     this.filterTitles = page.locator(
@@ -65,10 +57,20 @@ exports.SchedulePage = class SchedulePage {
       '(//div[normalize-space(text())="Shift Type"]//../following-sibling::div//div)[1]'
     );
 
-    this.leftArrow =this.isMobile?page.locator('//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_previous")]'): page.locator("(//icon[contains(@class,'previous')])[2]");
-    this.rightArrow =this.isMobile?page.locator('//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_next")]'): page.locator("(//icon[contains(@class,'next')])[2]");
-    
-    this.todayLink =this.isMobile?page.getByText('Today').nth(1):page.getByText('Today').nth(2);
+    this.leftArrow = this.isMobile
+      ? page.locator(
+          '//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_previous")]'
+        )
+      : page.locator("(//icon[contains(@class,'previous')])[2]");
+    this.rightArrow = this.isMobile
+      ? page.locator(
+          '//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_next")]'
+        )
+      : page.locator("(//icon[contains(@class,'next')])[2]");
+
+    this.todayLink = this.isMobile
+      ? page.getByText("Today").nth(1)
+      : page.getByText("Today").nth(2);
 
     this.myScheduleButton = page.locator(
       '//mat-button-toggle[contains(@class,"my_schedule_button")]'
@@ -90,16 +92,12 @@ exports.SchedulePage = class SchedulePage {
   async checkHighlightedDate() {
     const highlightedDate = await this.currentDate.innerText();
 
-    if(this.isMobile)
-      {
-    var formattedCurrentDate = helper.getOnlyCurrentDate();
-     
-      }
-      else{
-    var formattedCurrentDate = helper.getCurrentDate();
-      }
+    if (this.isMobile) {
+      var formattedCurrentDate = helper.getOnlyCurrentDate();
+    } else {
+      var formattedCurrentDate = helper.getCurrentDate();
+    }
     expect(highlightedDate).toBe(formattedCurrentDate);
-
   }
 
   async openFilter() {
@@ -120,10 +118,10 @@ exports.SchedulePage = class SchedulePage {
   }
   async verifyDefaultSelectedSchedule() {
     await expect(this.teamScheduleButton).toHaveClass(
-      helper.createRegExp(data.teamSchedule)
+      helper.createRegExp(data.checkedSchedule)
     );
     await expect(this.myScheduleButton).not.toHaveClass(
-      helper.createRegExp(data.mySchedule)
+      helper.createRegExp(data.checkedSchedule)
     );
   }
 

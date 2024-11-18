@@ -8,7 +8,6 @@ let loginPage;
 beforeEach(async ({ page }) => {
   schedulePage = new index.SchedulePage(page);
   loginPage = new index.LoginPage(page);
-
   await page.goto(process.env.lightHouseURL);
   await loginPage.loginFunction(process.env.userEmail,process.env.userPassword
   );

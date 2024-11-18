@@ -1,6 +1,5 @@
 
 {
-"teamSchedule":"mat-button-toggle-checked",
-"mySchedule":"mat-button-toggle-checked",
+"checkedSchedule":"mat-button-toggle-checked",
 "defaultSort":"bg-sky-200"
 }
