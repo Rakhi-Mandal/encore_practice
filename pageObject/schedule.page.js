@@ -1,57 +1,81 @@
 const { expect } = require("@playwright/test");
 const data = require("../data/data.json");
-const {createRegExp,getCurrentDate} = require(
-  "../utils/helper"
-  )
+const helper = require("../utils/helper");
+// const { createRegExp, getCurrentDate,getOnlyCurrentDate } = require("../utils/helper");
+const { devices } = require("playwright"); 
+const {projects}=require("../playwright.config")
 require("dotenv").config();
-
-
 exports.SchedulePage = class SchedulePage {
+  // constructor(page, isMobile = false) {
+  //   this.page = page;
+  //   this.isMobile = isMobile;
   constructor(page) {
+    // const project = projects.find((p) => p.name === projectName);
+    // if (!project) {
+    //   throw new Error(`Project with name ${projectName} not found`);
+    // }
     this.page = page;
-    this.scheduleModule = page.locator(
-      "//span[normalize-space(text())='Schedule']/parent::div[contains(@class, 'e2e_navigation_item_link')]"
+    this.isMobile = this.page.context()._options.isMobile;
+    // this.isMobile = project.use.isMobile;
+    this.chatContent = this.isMobile
+    this.scheduleModule =this.isMobile?page.locator('(//app-mobile-navigation-item)[2]'): page.locator(
+      "//span[normalize-space(text())='Schedule']/parent::div[contains(@class, 'navigation_item_link')]"
     );
-    this.currentDate = page.locator(
-      "//div[contains(@class, 'header-active')]"
+    this.currentDate = this.isMobile?page.locator('//div[contains(@class, "calendar-today")]'):page.locator(
+      "//div[contains(@class, 'timeline-header-active')]"
     );
-    this.teamScheduleTable = page.locator(
-      "(//div[contains(@class, 'timeline-grid')])[1]"
-    );
-    this.filter = page.locator("//icon[@name='filter_bulk']//parent::div");
-
-    this.filterPage = page.locator(
-      "//div[contains(@class, 'cdk-overlay-pane')]"
-    );
-    this.filterTitles = page.locator("(//div[contains(@class, 'filter_title')])[1]");
     
 
-    this.clearFiltersButton = page.locator("(//span[text()=' Clear filters '])[1]");
+    this.teamScheduleTable =this.isMobile?page.locator('.mbsc-event-list'): page.locator(
+      "(//mbsc-timeline//following-sibling::div)[4]"
+    );
+    this.filter =this.isMobile?page.locator("(//icon[@name='filter_bulk']//parent::div)[2]"): page.locator("//icon[@name='filter_bulk']//parent::div");
+
+    this.filterPage = page.locator("//app-filter-bottom-sheet");
+    this.filterTitles = page.locator(
+      "(//div[contains(@class, 'filter_title')])[1]"
+    );
+    this.clearFiltersButton = page.locator(
+      "(//span[text()=' Clear filters '])[1]"
+    );
     this.applyFiltersButton = page.locator(
       "//span[contains(@class,'e2e_filter_sheet_dismiss')]"
     );
 
-    // Filters section
-    this.employeeNameOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[1]');
-    this.locationTitle = page.locator('(//div[contains(@class, "filter_title")])[2]');
-    this.locationOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[3]');
-    this.assignmentTitle = page.locator('(//div[contains(@class, "filter_title")])[5]');
-    this.assignmentOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[35]');
-    this.shiftTitle = page.locator('(//div[contains(@class, "filter_title")])[7]');
-    this.shiftTypeOption = page.locator('(//div[contains(@class,"cm-chips-wrapper")]//div)[80]');
+    this.employeeNameOption = page.locator(
+      '(//div[normalize-space(text())="Sort"]//../following-sibling::div//div)[1]'
+    );
+    this.locationTitle = page.locator(
+      '(//div[contains(@class, "filter_title")])[2]'
+    );
+    this.locationOption = page.locator(
+      '(//div[normalize-space(text())="At Location"]//../following-sibling::div//div)[1]'
+    );
 
-    this.leftArrow = page.locator(
-      "(//icon[contains(@class,'e2e_schedule_previous')])[2]"
+    this.assignmentTitle = page.locator(
+      '//div[normalize-space(text())="Assignment"]'
     );
-    this.rightArrow = page.locator(
-      "(//icon[contains(@class,'e2e_schedule_next')])[2]"
+    this.assignmentOption = page.locator(
+      '(//div[normalize-space(text())="Assignment"]//../following-sibling::div//div)[1]'
     );
-    // Locator for the 'Today' link (update the locator if needed)
-    this.todayLink = page.locator(
-      "(//icon[contains(@class,'e2e_schedule_next')])[2]//parent::div//following-sibling::span"
+    this.shiftTitle = page.locator(
+      '//div[normalize-space(text())="Shift Type"]'
     );
-    this.myScheduleButton = page.locator('.e2e_schedule_my_schedule_button');
-    this.teamScheduleButton = page.locator('.e2e_schedule_team_schedule_button');
+    this.shiftTypeOption = page.locator(
+      '(//div[normalize-space(text())="Shift Type"]//../following-sibling::div//div)[1]'
+    );
+
+    this.leftArrow =this.isMobile?page.locator('//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_previous")]'): page.locator("(//icon[contains(@class,'previous')])[2]");
+    this.rightArrow =this.isMobile?page.locator('//div[normalize-space(text())="Schedule"]//following-sibling::div[2]//icon[contains(@class,"schedule_next")]'): page.locator("(//icon[contains(@class,'next')])[2]");
+    
+    this.todayLink =this.isMobile?page.getByText('Today').nth(1):page.getByText('Today').nth(2);
+
+    this.myScheduleButton = page.locator(
+      '//mat-button-toggle[contains(@class,"my_schedule_button")]'
+    );
+    this.teamScheduleButton = page.locator(
+      '//mat-button-toggle[contains(@class,"team_schedule_button")]'
+    );
     this.employeeNameOption = page.locator('div[title="Employee Name"]');
   }
 
@@ -61,41 +85,48 @@ exports.SchedulePage = class SchedulePage {
 
   async launchschedulePage() {
     await expect(this.teamScheduleTable).toBeVisible();
-    //Scrollable
     await expect(this.teamScheduleTable).toHaveCSS("overflow", "auto");
   }
   async checkHighlightedDate() {
-    const highlightedDate = await this.currentDate.innerText();  // Get the highlighted date from the page
+    const highlightedDate = await this.currentDate.innerText();
 
-    // Get the formatted current date by calling the helper function
-    const formattedCurrentDate = getCurrentDate();  
-
-    // Compare the actual date with the highlighted date
+    if(this.isMobile)
+      {
+    var formattedCurrentDate = helper.getOnlyCurrentDate();
+     
+      }
+      else{
+    var formattedCurrentDate = helper.getCurrentDate();
+      }
     expect(highlightedDate).toBe(formattedCurrentDate);
+
   }
 
   async openFilter() {
     await expect(this.filter).toBeVisible();
     await this.filter.click();
-    await expect(this.filterPage).toBeVisible(parseInt(process.env.smallTimeOut));
-    // await expect(this.filterPage).toBeVisible();
-
+    await expect(this.filterPage).toBeVisible(
+      parseInt(process.env.smallTimeOut)
+    );
   }
-  async checkDefaultSort(){
+  async checkDefaultSort() {
     await this.filterTitles.click();
-    await expect(this.employeeNameOption).toHaveClass(createRegExp(data.defaultSort));
-
-
+    await expect(this.employeeNameOption).toHaveClass(
+      helper.createRegExp(data.defaultSort)
+    );
+    await expect(this.employeeNameOption).toHaveClass(
+      helper.createRegExp(data.defaultSort)
+    );
   }
-  async verifyDefaultSelectedSchedule(){
-     // await expect(schedulePage.teamScheduleButton).toHaveClass(data.teamSchedule); 
-  await expect(this.teamScheduleButton).toHaveClass(createRegExp(data.teamSchedule));
-  // createRegExp
-  
-  // Verify that the "My Schedule" button is NOT checked by default 
-  await expect(this.myScheduleButton).not.toHaveClass(createRegExp(data.mySchedule));
+  async verifyDefaultSelectedSchedule() {
+    await expect(this.teamScheduleButton).toHaveClass(
+      helper.createRegExp(data.teamSchedule)
+    );
+    await expect(this.myScheduleButton).not.toHaveClass(
+      helper.createRegExp(data.mySchedule)
+    );
   }
- 
+
   async goToPreviousWeek() {
     await this.leftArrow.click();
   }
@@ -116,40 +147,32 @@ exports.SchedulePage = class SchedulePage {
   }
 
   async clearFilter() {
-    // Clear filters by clicking the "Clear filters" button
     await this.clearFiltersButton.click();
   }
 
-
-   // Filter Methods
-   async selectSortByEmployeeName() {
-    // Ensure the Employee Name filter is clicked
+  async selectSortByEmployeeName() {
     await expect(this.employeeNameOption).toBeVisible();
     await this.employeeNameOption.click();
   }
 
   async selectLocation() {
-    // Select the "Location" filter
     await this.locationTitle.click();
     await expect(this.locationOption).toBeVisible();
     await this.locationOption.click();
   }
 
   async selectAssignment() {
-    // Select the "Assignment" filter
     await this.assignmentTitle.click();
     await expect(this.assignmentOption).toBeVisible();
     await this.assignmentOption.click();
   }
 
   async selectShiftType() {
-    // Select the "Shift Type" filter
-    await this.shiftTitle.click()
+    await this.shiftTitle.click();
     await expect(this.shiftTypeOption).toBeVisible();
     await this.shiftTypeOption.click();
   }
 
-  // Apply and Clear Filters
   async applyFilter() {
     await this.applyFiltersButton.click();
   }
@@ -158,12 +181,10 @@ exports.SchedulePage = class SchedulePage {
     await this.clearFiltersButton.click();
   }
 
-  // Helper: Check All Filters
   async checkAllFilterOptions() {
     await this.selectSortByEmployeeName();
     await this.selectLocation();
     await this.selectAssignment();
-    // await this.selectShiftType();
     await this.applyFilter();
   }
 };
