@@ -6,7 +6,6 @@ exports.SchedulePage = class SchedulePage {
   constructor(page) {
     this.page = page;
     this.isMobile = this.page.context()._options.isMobile;
-    this.chatContent = this.isMobile;
     this.scheduleModule = this.isMobile
       ? page.locator("(//app-mobile-navigation-item)[2]")
       : page.locator(
