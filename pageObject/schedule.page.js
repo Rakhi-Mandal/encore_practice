@@ -6,7 +6,6 @@ exports.SchedulePage = class SchedulePage {
   constructor(page) {
     this.page = page;
     this.isMobile = this.page.context()._options.isMobile;
-    this.chatContent = this.isMobile;
     this.scheduleModule = this.isMobile
       ? page.locator("(//app-mobile-navigation-item)[2]")
       : page.locator(
@@ -69,7 +68,7 @@ exports.SchedulePage = class SchedulePage {
       : page.locator("(//icon[contains(@class,'next')])[2]");
 
     this.todayLink = this.isMobile
-      ? page.getByText("Today").nth(1)
+      ? page.getByText("Today").nth(5)
       : page.getByText("Today").nth(2);
 
     this.myScheduleButton = page.locator(
@@ -124,18 +123,13 @@ exports.SchedulePage = class SchedulePage {
       helper.createRegExp(data.checkedSchedule)
     );
   }
-
-  async goToPreviousWeek() {
+  async navigateCalender(){
     await this.leftArrow.click();
-  }
-
-  async goToNextWeek() {
-    await this.rightArrow.click();
-  }
-
-  async clickToday() {
     await this.todayLink.click();
+    await this.rightArrow.click();
+
   }
+
   async checkAllFilterOptions() {
     await this.filterTitles.click();
   }

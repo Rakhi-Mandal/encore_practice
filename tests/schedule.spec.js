@@ -17,9 +17,7 @@ test("C56916: a:Launch Schedule page and check the functionality", async ({}) =>
   await schedulePage.scheduleModule.click();
   await schedulePage.launchschedulePage();
   await schedulePage.checkHighlightedDate();
-  await schedulePage.goToPreviousWeek();
-  await schedulePage.clickToday();
-  await schedulePage.goToNextWeek();
+  await schedulePage.navigateCalender();
   await schedulePage.verifyDefaultSelectedSchedule();
   await schedulePage.openFilter();
   await schedulePage.checkDefaultSort();
