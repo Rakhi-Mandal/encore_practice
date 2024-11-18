@@ -2,11 +2,6 @@
     "flowsheet": {
         "searchtext":"57173"
     },
-    "group":{
-        "Test1":"Test1",
-        "Test2":"Test2",
-        "Test3":"Test3"
-    },
     "search":{
         "invalidNumber":"5710",
         "validNumber":"57173",
