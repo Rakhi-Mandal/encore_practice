@@ -68,7 +68,7 @@ exports.SchedulePage = class SchedulePage {
       : page.locator("(//icon[contains(@class,'next')])[2]");
 
     this.todayLink = this.isMobile
-      ? page.getByText("Today").nth(5)
+      ? page.getByText("Today").nth(1)
       : page.getByText("Today").nth(2);
 
     this.myScheduleButton = page.locator(
