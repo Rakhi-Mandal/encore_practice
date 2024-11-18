@@ -4,7 +4,11 @@
   "main": "index.js",
   "scripts": {
     "ui":" npx playwright test --project=chromium",
-    "mobile":" npx playwright test --project=mobile"
+    "mobile":" npx playwright test --project=mobile",
+    "test:allure": "playwright test --reporter=allure-playwright", 
+    "allure:generate": "allure generate allure-results --clean -o allure-report",  
+    "allure:report":"playwright test --reporter=allure-playwright && allure generate allure-results --clean -o allure-report",
+    "allure:serve": "allure serve allure-results"  
   },
   "keywords": [],
   "author": "",

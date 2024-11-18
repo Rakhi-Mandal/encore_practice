@@ -4,7 +4,7 @@ const indexPage= require('../utils/index.page')
 
 let chatPage,loginPage;
 
-test.describe("C56931 Create New Chat / Add participant / Leave Chat Preconditions",()=>{
+test.describe("C56931 Verifing create new chat,add participant and leave chat preconditions",()=>{
     test.beforeEach("Login page", async({page})=>{
         chatPage=new indexPage.ChatPage(page);
         loginPage=new indexPage.LoginPage(page)

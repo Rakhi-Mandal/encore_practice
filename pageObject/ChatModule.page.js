@@ -27,7 +27,7 @@ exports.ChatPage = class ChatPage {
         this.clickYes = page.locator("//button[contains(@class,'e2e_confirm_dialog_yes')]")
         this.searchFunction = page.locator("//input[@placeholder='Search users']")
         this.editButton = this.isMobile
-        ? page.locator("(//icon[@name='pen_line'])[2]")
+        ? page.locator("(//app-avatar//following-sibling::div)[2]//following-sibling::icon")
         : page.locator("(//icon[@name='pen_line'])[1]")
         this.selectingUser=page.locator("(//div[@role='listbox']//child::mat-option)[2]")
         this.groupName = page.locator("//div[text()='Group name']//following-sibling::input")
@@ -77,7 +77,6 @@ exports.ChatPage = class ChatPage {
         await this.selectingUser.click();
         await this.addButton.click();
         await this.groupIcon.click();
-        await expect(this.leave).toBeVisible();
         await this.leave.click();
         await this.clickYes.click();
         await this.groupIcon.click();
@@ -118,7 +117,6 @@ exports.ChatPage = class ChatPage {
 
     async renameGroupChat() {
         await expect(this.editButton).toBeVisible();
-        await this.page.pause();
         await this.editButton.click();
         const chatNameInput = await this.groupName;
         await chatNameInput.fill(data.renameGroup);
