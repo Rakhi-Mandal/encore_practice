@@ -1,10 +1,8 @@
 const { LoginPage } = require("../pageObject/login.page");
-const {ChatPage}=require("../pageObject/ChatModule.page")
-
+import { ChatPage } from "../pageObject/ChatModule.page";
 
 
 export {
     LoginPage,
     ChatPage
-
 }

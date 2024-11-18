@@ -1,11 +1,10 @@
 const {test}= require('@playwright/test')
-const indexPage= require('../index.page.js')
-const data=require('../data/data.json')
+const indexPage= require('../utils/index.page')
 
 
 let chatPage,loginPage;
 
-test.describe("Create New Chat / Add participant / Leave Chat",()=>{
+test.describe("C56931 Create New Chat / Add participant / Leave Chat Preconditions",()=>{
     test.beforeEach("Login page", async({page})=>{
         chatPage=new indexPage.ChatPage(page);
         loginPage=new indexPage.LoginPage(page)
@@ -13,17 +12,13 @@ test.describe("Create New Chat / Add participant / Leave Chat",()=>{
         await loginPage.loginFunction();
         
     })
-    test("Chat Page Module",async()=>{
+    test("ChatModule Test Cases",async()=>{
         await chatPage.testChatElement();
         await chatPage.createNewChatIcon();
         await chatPage.selectingUsers();
         await chatPage.clickOnTheGroupIcon();
         await chatPage.searchFunctionality();
         await chatPage.addButtonOperation();
-        await chatPage.renameTheChat();
+        await chatPage.renameGroupChat();
     })
-    // test("Rename the Chat",async()=>{
-    //     await chatPage.renameTheChat() 
-    // })
-
 })
