@@ -2,7 +2,13 @@
   "name": "lighthouse",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+  "ui": "npx playwright test --project=chromium",
+  "mobile": "npx playwright test  --project=mobile",
+  "allure:generate": "allure generate allure-results -o allure-report --clean ",
+  "allure:open": "allure open allure-report",
+  "test:allure": "npx playwright test & allure generate allure-results --clean && allure open allure-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

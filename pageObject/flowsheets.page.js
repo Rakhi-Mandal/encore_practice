@@ -4,6 +4,7 @@ const indexPage = require('../utils/index.page');
 export class FlowsheetSearch {
    constructor(page) {
       this.page = page;
+      this.isMobile = this.page.context()._options.isMobile;
       this.rooms_count = page.locator("(//app-label-with-number[1]/div[1]/div[2])[1]");
       this.search_box = page.locator("//input[@placeholder='Search Flowsheets']");
       this.cross_icon = page.locator("//icon[@name='cross_line']");
@@ -11,11 +12,9 @@ export class FlowsheetSearch {
    async roomsVisibility() {
       await expect(this.rooms_count).toBeVisible();
    }
-
    async searchClear() {
       await this.cross_icon.click();
    }
-
    async verifySearchFunctionality() {
       await expect(this.search_box).toBeEditable();
       await this.search_box.fill(indexPage.data.search.validNumber);

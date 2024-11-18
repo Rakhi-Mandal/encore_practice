@@ -11,9 +11,9 @@ const { defineConfig, devices } = require('@playwright/test');
  * @see https://playwright.dev/docs/test-configuration
  */
 module.exports = defineConfig({
-  timeout:3*60*1000,
-  expect:{
-    timeout:60*1000,
+  timeout: 3 * 60 * 1000,
+  expect: {
+    timeout: 60 * 1000,
   },
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -25,10 +25,10 @@ module.exports = defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [ 
+  reporter: [
     ["html"],
-    ["allure-playwright"] 
-    
+    ["allure-playwright", { outputFolder: 'allure-report' }]
+
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -37,9 +37,9 @@ module.exports = defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    headless:false,
-    screenshot :'on',
-    video:'retain-on-failure'
+    headless: false,
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure'
   },
 
   /* Configure projects for major browsers */
@@ -47,13 +47,15 @@ module.exports = defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    }
+    },
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
+     {
+      name: 'mobile',      
+      use: { ...devices['Galaxy S5'],
+        isMobile:true
+      },
+    },
     // {
     //   name: 'Mobile Safari',
     //   use: { ...devices['iPhone 12'] },
